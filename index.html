@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GUI Database</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="navbar hidden" id="main-nav">
+        <div class="nav-links">
+            <span class="brand">GUI Database</span>
+            <a onclick="chuyenTrang('home-page')">Home</a>
+            <a onclick="chuyenTrang('product-page')">Sản Phẩm</a>
+            <a onclick="chuyenTrang('order-page')">Đơn hàng</a>
+            <a onclick="chuyenTrang('supplier-page')">Nhà Cung Cấp</a>
+            <a onclick="chuyenTrang('warehouse-page')">Kho Hàng</a>
+            <a onclick="chuyenTrang('ship-page')">Giao Hàng</a>
+            <a onclick="chuyenTrang('delivery-page')">Phiếu Xuất</a>
+            <a onclick="chuyenTrang('receipt-page')">Phiếu Nhập</a>
+            <a onclick="dangXuat()">Logout</a>
+        </div>
+        <div class="nav-search">
+            <input type="text" placeholder="Search">
+            <button>Search</button>
+        </div>
+    </div>
+
+    <div id="login-page" class="view-section">
+        <div class="login-box">
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" id="username" value="admin">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="password" value=".">
+            </div>
+            <button class="btn-login" onclick="kiemTraDangNhap()">Login</button>
+            <p id="login-error" style="color: red; display: none; margin-top: 10px; font-size: 13px;">Sai thông tin đăng nhập!</p>
+        </div>
+    </div>
+
+    <div id="home-page" class="view-section hidden container">
+        <h2>Mô Tả</h2>
+        <p style="line-height: 1.6; font-size: 15px;">- Một doanh nghiệp chịu trách nhiệm quản lý một kho hàng là một cứ điểm để lưu trữ, lưu chuyển, phân phối hàng hóa. Quản lý thống nhất mô hình này không phải là việc đơn giản nếu chỉ sử dụng phương pháp quản lý kho truyền thống. Do đó, người ta cần tin học hóa việc quản lý kho nhằm giúp doanh nghiệp nắm bắt được thông tin về hàng hóa sản phẩm một cách chính xác kịp thời( kiểm tra được số lượng và giá trị hàng hóa tồn trong mỗi kho và trong tổng thể các kho, mặt hàng tồn có giá trị lớn nhất...). Từ đó, người quản lý doanh nghiệp có thể đưa ra các kế hoạch và quyết định đúng đắn, nâng cao kết quả hoạt động sản xuất kinh doanh. Cụ thể:</p>
+        <ul style="margin: 15px 0 15px 30px; font-size: 15px; line-height: 1.6;">
+            <li>Cung cấp thông tin đầy đủ, chính xác về hoạt động xuất nhập kho theo thời gian thực.</li>
+            <li>Hỗ trợ việc theo dõi, giám sát tình trạng kho hàng, hạn sử dụng, giá trị hàng hóa.</li>
+            <li>Tạo báo cáo thống kê chi tiết về hoạt động của kho hàng theo nhiều tiêu chí.</li>
+            <li>Truy xuất được thông tin khi cần thiết.</li>
+        </ul>
+        <hr style="margin: 20px 0;">
+        <h3>Thanh bên</h3>
+        <ul style="margin-left: 20px; color: #0d6efd;">
+            <li>Liên kết 1</li>
+            <li>Liên kết 2</li>
+            <li>Liên kết 3</li>
+        </ul>
+    </div>
+
+    <div id="product-page" class="view-section hidden container">
+        <div class="input-row" id="form-product-page">
+            <div><p>product_id</p><input type="text" data-key="id"></div>
+            <div><p>product_name</p><input type="text" data-key="name"></div>
+            <div><p>product_key</p><input type="text" data-key="key"></div>
+            <div><p>description</p><input type="text" data-key="desc"></div>
+            <div><p>unit_price</p><input type="text" data-key="price"></div>
+            <div><p>brand</p><input type="text" data-key="brand"></div>
+            <div><p>unit</p><input type="text" data-key="unit"></div>
+            <div><p>mfg_date</p><input type="text" data-key="mfg"></div>
+            <div><p>expiry_date</p><input type="text" data-key="exp"></div>
+            <div><p>warehouse_id</p><input type="text" data-key="wh"></div>
+            <div><button class="btn-add" onclick="luuThongTin('product-page')">Thêm</button></div>
+        </div>
+        <h2>These is Sanpham</h2>
+        <table>
+            <thead><tr><th>product_id</th><th>product_name</th><th>product_key</th><th>description</th><th>unit_price</th><th>brand</th><th>unit</th><th>manufacturing_date</th><th>expiry_date</th><th>warehouse_id</th><th>Thao tác</th></tr></thead>
+            <tbody id="bang-san-pham"></tbody>
+        </table>
+    </div>
+
+    <div id="order-page" class="view-section hidden container">
+        <div class="input-row" id="form-order-page">
+            <div><p>order_id</p><input type="text" data-key="id"></div>
+            <div><p>order_date</p><input type="text" data-key="date"></div>
+            <div><p>date_of_delivery</p><input type="text" data-key="delivery"></div>
+            <div><p>order_price</p><input type="text" data-key="price"></div>
+            <div><p>date_of_payment</p><input type="text" data-key="payment"></div>
+            <div><button class="btn-add" onclick="luuThongTin('order-page')">Thêm</button></div>
+        </div>
+        <h2>These are Donhang</h2>
+        <table>
+            <thead><tr><th>order_id</th><th>order_date</th><th>date_of_delivery</th><th>order_price</th><th>date_of_payment</th><th>Thao tác</th></tr></thead>
+            <tbody id="bang-don-hang"></tbody>
+        </table>
+    </div>
+
+    <div id="supplier-page" class="view-section hidden container">
+        <div class="input-row" id="form-supplier-page">
+            <div><p>supplier_id</p><input type="text" data-key="id"></div>
+            <div><p>supplier_name</p><input type="text" data-key="name"></div>
+            <div><p>email</p><input type="text" data-key="email"></div>
+            <div><p>address</p><input type="text" data-key="address"></div>
+            <div><button class="btn-add" onclick="luuThongTin('supplier-page')">Thêm</button></div>
+        </div>
+        <h2>These is Nha Cung Cap</h2>
+        <table>
+            <thead><tr><th>supplier_id</th><th>supplier_name</th><th>email</th><th>address</th><th>Thao tác</th></tr></thead>
+            <tbody id="bang-nha-cung-cap"></tbody>
+        </table>
+    </div>
+
+    <div id="warehouse-page" class="view-section hidden container">
+        <div class="input-row" id="form-warehouse-page">
+            <div><p>warehouse_id</p><input type="text" data-key="id"></div>
+            <div><p>warehouse_name</p><input type="text" data-key="name"></div>
+            <div><p>location</p><input type="text" data-key="location"></div>
+            <div><p>capacity</p><input type="text" data-key="capacity"></div>
+            <div><button class="btn-add" onclick="luuThongTin('warehouse-page')">Thêm</button></div>
+        </div>
+        <h2>These are Kho Hang</h2>
+        <table>
+            <thead><tr><th>warehouse_id</th><th>warehouse_name</th><th>location</th><th>capacity</th><th>Thao tác</th></tr></thead>
+            <tbody id="bang-kho-hang"></tbody>
+        </table>
+    </div>
+
+    <div id="ship-page" class="view-section hidden container">
+        <div class="input-row" id="form-ship-page">
+            <div><p>ship_unit_id</p><input type="text" data-key="id"></div>
+            <div><p>name</p><input type="text" data-key="name"></div>
+            <div><p>email</p><input type="text" data-key="email"></div>
+            <div><p>address</p><input type="text" data-key="address"></div>
+            <div><p>phonenumber</p><input type="text" data-key="phone"></div>
+            <div><p>status_of_order</p><input type="text" data-key="status"></div>
+            <div><p>qty_received</p><input type="text" data-key="recv"></div>
+            <div><p>qty_delivered</p><input type="text" data-key="deliv"></div>
+            <div><button class="btn-add" onclick="luuThongTin('ship-page')">Thêm</button></div>
+        </div>
+        <h2>These are Giao hang</h2>
+        <table>
+            <thead><tr><th>ship_unit_id</th><th>name</th><th>email</th><th>address</th><th>phonenumber</th><th>status_of_order</th><th>quantity_received</th><th>quantity_delivered</th><th>Thao tác</th></tr></thead>
+            <tbody id="bang-giao-hang"></tbody>
+        </table>
+    </div>
+
+    <div id="delivery-page" class="view-section hidden container">
+        <div class="input-row" id="form-delivery-page">
+            <div><p>delivery_id</p><input type="text" data-key="id"></div>
+            <div><p>delivery_date</p><input type="text" data-key="date"></div>
+            <div><p>order_price</p><input type="text" data-key="price"></div>
+            <div><p>warehouse_id</p><input type="text" data-key="wh"></div>
+            <div><button class="btn-add" onclick="luuThongTin('delivery-page')">Thêm</button></div>
+        </div>
+        <h2>These is Phieu Xuat</h2>
+        <table>
+            <thead><tr><th>delivery_id</th><th>delivery_date</th><th>order_price</th><th>warehouse_id</th><th>Thao tác</th></tr></thead>
+            <tbody id="bang-phieu-xuat"></tbody>
+        </table>
+    </div>
+
+    <div id="receipt-page" class="view-section hidden container">
+        <div class="input-row" id="form-receipt-page">
+            <div><p>receipt_id</p><input type="text" data-key="id"></div>
+            <div><p>receipt_date</p><input type="text" data-key="date"></div>
+            <div><p>quantity_received</p><input type="text" data-key="qty"></div>
+            <div><p>order_price</p><input type="text" data-key="price"></div>
+            <div><p>warehouse_id</p><input type="text" data-key="wh"></div>
+            <div><button class="btn-add" onclick="luuThongTin('receipt-page')">Thêm</button></div>
+        </div>
+        <h2>These is Phieu Nhap</h2>
+        <table>
+            <thead><tr><th>receipt_id</th><th>receipt_date</th><th>quantity_received</th><th>order_price</th><th>warehouse_id</th><th>Thao tác</th></tr></thead>
+            <tbody id="bang-phieu-nhap"></tbody>
+        </table>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
