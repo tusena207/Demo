@@ -8,7 +8,7 @@ const duLieu = {
     phieuNhap: [{ id: "RECEIPT1", date: "2024-05-13", qty: "100", price: "10000000", wh: "W1" }]
 };
 
-// Bảng map giúp JS tự biết trang nào cần lấy dữ liệu nào
+
 const mapTrang = {
     'product-page': { dataKey: 'sanPham', tableId: 'bang-san-pham' },
     'order-page': { dataKey: 'donHang', tableId: 'bang-don-hang' },
@@ -19,9 +19,7 @@ const mapTrang = {
     'receipt-page': { dataKey: 'phieuNhap', tableId: 'bang-phieu-nhap' }
 };
 
-// Biến toàn cục lưu trạng thái xem ta đang "Thêm" hay "Sửa"
 let idDangSua = null;
-// Hàm 1: Đăng nhập
 function kiemTraDangNhap() {
     let uName = document.getElementById('username').value;
     let pWord = document.getElementById('password').value;
@@ -34,22 +32,21 @@ function kiemTraDangNhap() {
     }
 }
 
-// Hàm 2: Chuyển trang và Render bảng
+
 function chuyenTrang(idTrangDich) {
     let cacTrang = document.getElementsByClassName('view-section');
     for (let i = 0; i < cacTrang.length; i++) cacTrang[i].classList.add('hidden');
     document.getElementById(idTrangDich).classList.remove('hidden');
 
-    // Hủy trạng thái đang sửa (nếu có) khi đổi trang
+
     idDangSua = null; 
 
     if (mapTrang[idTrangDich]) {
         renderBang(idTrangDich);
-        resetForm(idTrangDich); // Làm sạch ô input khi đổi trang
+        resetForm(idTrangDich);
     }
 }
 
-// Hàm 3: Render Bảng dữ liệu tự động
 function renderBang(idTrang) {
     let config = mapTrang[idTrang];
     let tbody = document.getElementById(config.tableId);
@@ -61,7 +58,6 @@ function renderBang(idTrang) {
         let noiDungRow = "";
         for (let key in item) noiDungRow += `<td>${item[key]}</td>`;
         
-        // Gắn luôn tham số vào các nút Sửa, Xóa
         noiDungRow += `
             <td>
                 <button class="btn-update" onclick="batDauSua('${idTrang}', '${item.id}')">Update</button>
@@ -72,21 +68,16 @@ function renderBang(idTrang) {
         tbody.appendChild(tr);
     }
 }
-
-// Hàm 4: Lưu thông tin (Dùng chung cho cả Thêm mới và Sửa bản ghi)
 function luuThongTin(idTrang) {
     let config = mapTrang[idTrang];
     let container = document.getElementById('form-' + idTrang);
     let cacInput = container.querySelectorAll('input');
     
     let banGhiMoi = {};
-    // Quét tất cả các ô input có thuộc tính data-key để đóng gói thành 1 object
     for (let input of cacInput) {
         let key = input.getAttribute('data-key');
         if (key) banGhiMoi[key] = input.value;
     }
-
-    // Bắt lỗi cơ bản (Sử dụng If/Else)
     if (!banGhiMoi.id || banGhiMoi.id.trim() === "") {
         alert("Bạn phải nhập mã ID đầu tiên!");
         return;
@@ -95,7 +86,6 @@ function luuThongTin(idTrang) {
     let mangDuLieu = duLieu[config.dataKey];
 
     if (idDangSua === null) {
-        // LOGIC THÊM MỚI: Kiểm tra trùng ID
         let tonTai = mangDuLieu.find(x => x.id === banGhiMoi.id);
         if (tonTai) {
             alert("ID này đã tồn tại, vui lòng nhập mã khác!");
@@ -103,22 +93,19 @@ function luuThongTin(idTrang) {
         }
         mangDuLieu.push(banGhiMoi);
     } else {
-        // LOGIC CẬP NHẬT: Tìm vị trí phần tử cũ và ghi đè
         for (let i = 0; i < mangDuLieu.length; i++) {
             if (mangDuLieu[i].id === idDangSua) {
                 mangDuLieu[i] = banGhiMoi;
                 break;
             }
         }
-        idDangSua = null; // Hoàn thành cập nhật, reset trạng thái
-        container.querySelector('.btn-add').innerText = "Thêm"; // Đổi lại tên nút
+        idDangSua = null; 
+        container.querySelector('.btn-add').innerText = "Thêm"; 
     }
 
     resetForm(idTrang);
     renderBang(idTrang);
 }
-
-// Hàm 5: Bắt đầu Sửa (Đẩy dữ liệu từ bảng lên các ô Input)
 function batDauSua(idTrang, idCanSua) {
     let config = mapTrang[idTrang];
     let item = duLieu[config.dataKey].find(x => x.id === idCanSua);
@@ -134,23 +121,20 @@ function batDauSua(idTrang, idCanSua) {
         }
     }
     
-    idDangSua = idCanSua; // Bật cờ đánh dấu đang sửa
+    idDangSua = idCanSua; 
     container.querySelector('.btn-add').innerText = "Lưu Update";
 }
 
-// Hàm 6: Xóa bản ghi
 function xoaBanGhi(idTrang, idCanXoa) {
     let xacNhan = confirm("Bạn có chắc chắn muốn xóa bản ghi: " + idCanXoa + "?");
     if (xacNhan) {
         let config = mapTrang[idTrang];
-        // Lọc bỏ phần tử bị xóa ra khỏi mảng
         duLieu[config.dataKey] = duLieu[config.dataKey].filter(item => item.id !== idCanXoa);
         renderBang(idTrang);
         resetForm(idTrang);
     }
 }
 
-// Hàm 7: Xóa rỗng các ô nhập liệu
 function resetForm(idTrang) {
     let container = document.getElementById('form-' + idTrang);
     let cacInput = container.querySelectorAll('input');
@@ -159,7 +143,6 @@ function resetForm(idTrang) {
     idDangSua = null;
 }
 
-// Hàm 8: Đăng xuất
 function dangXuat() {
     document.getElementById('main-nav').classList.add('hidden');
     chuyenTrang('login-page');
